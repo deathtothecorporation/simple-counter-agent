@@ -1,5 +1,5 @@
 /-  *counter
-/+  verb, dbug, default-agent
+/+  verb, dbug, default-agent, agentio
 ::
 |%
 ::
@@ -24,7 +24,8 @@
   |_  =bowl:gall
   +*  this  .
       def  ~(. (default-agent this %|) bowl)
-      eng   ~(. +> [bowl ~])
+      eng  ~(. +> [bowl ~])
+      io   ~(. agentio bowl)
   ++  on-init
     ^-  (quip card _this)
     ~>  %bout.[0 '%counter +on-init']
@@ -59,12 +60,16 @@
         ?-  -.act
           %inc
         =.  numb  (add 1 numb)
-        :_  state
-        :~  :^  %give  %fact  ~[/web-ui]
+        =/  ui-card  :~
+            :^  %give  %fact  ~[/web-ui]
             :-  %counter-update
             !>  ^-  update
             [%incd numb]
         ==
+        :: =/  gall-card  ~
+        =/  gall-card  ~[(fact:io counter-update+!>(`update`[%incd numb]) ~[/sent-cards])]
+        :: :-  (snoc ui-card gall-card)  state
+        :-  (weld ui-card gall-card)  state
           %dec
         =.  numb  (sub numb 1)
         :_  state
@@ -74,13 +79,11 @@
             [%decd numb]
         ==
           %sub
+        ::  insure subscriptions can only be started by us
+        ?>  =(our.bowl src.bowl)
         :_  state
         ::  TODO: change to subscription
-        :~  :^  %give  %fact  ~[/web-ui]
-            :-  %counter-update
-            !>  ^-  update
-            [%subd whom.act]
-        ==
+        ~[(~(watch pass:io /heard-updates) [whom.act %counter] /sent-updates)]
       ==
     --
   ::
