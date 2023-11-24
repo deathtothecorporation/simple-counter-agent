@@ -11,6 +11,7 @@ docs for environment setup: https://docs.urbit.org/courses/environment
      pier (156): live
   ```
 - start a sum, note its port
+- do `+code` to get the login code for this ship, note that down.
 - install the desk:
   - `|new-desk %counter`
   - `|mount %counter`
@@ -19,6 +20,19 @@ docs for environment setup: https://docs.urbit.org/courses/environment
   - `|install our %counter`
   - `:counter +dbug`
   - `:treaty|publish %counter`
+- do a basic test in the dojo
+  - `:counter +dbug` you should see: `[%0 numb=0]`
+  - `:counter &counter-do [%inc ~]`
+  - `:counter +dbug` you should see: `[%0 numb=1]`
+  - `:counter &counter-do [%dec ~]`
+  - `:counter +dbug` you should see: `[%0 numb=0]`
+
+- `npm i`
+- `npm run serve`
+- visit the base URL of the port mentioned there (probably
+http://localhost:3000) and _log in to the fake ship_ with the code from above.
+- now visit localhost:3000/apps/counter/ **note the trailing slash! include
+this**.
 
 
 # Vite/Vue3/Typescript/Tailwind/Urbit template

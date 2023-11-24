@@ -1,13 +1,13 @@
 import urbitAPI from "./urbitAPI";
-import * as P from "@/api/types/my-poke"
+import * as P from "@/api/types/counter-pokes"
 
-const MyMarkFile = "some-mark"
+const DoMark = "counter-do"
 
-class MyAction {
+class CounterAction {
   payload: any;
 
   constructor(
-    payload: P.MyPokes
+    payload: P.CounterPokes
   ) {
     this.payload = payload
   }
@@ -16,22 +16,27 @@ class MyAction {
     const json = this.payload
     console.log('json ', json)
     return urbitAPI.poke({
-      app: 'my-app', // TODO:
-      mark: MyMarkFile,
+      app: 'counter',
+      mark: DoMark,
       json
     })
   }
 }
 
-export class MyPoke extends MyAction {
-  declare payload: P.MyPokePayload['some']['thing'];
+export class Inc extends CounterAction {
+  declare payload: P.IncPayload
 
-  constructor(thing: P.MyPokePayload['some']['thing']) {
-    const json: P.MyPokePayload = {
-      some: {
-        thing
-      }
-    }
+  constructor() {
+    const json: P.IncPayload = { inc: null }
+    super(json)
+  }
+}
+
+export class Dec extends CounterAction {
+  declare payload: P.DecPayload
+
+  constructor() {
+    const json: P.DecPayload = { dec: null }
     super(json)
   }
 }

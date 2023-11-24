@@ -19,7 +19,7 @@ const routes: Array<RouteRecordRaw> = [
 ];
 
 const router = createRouter({
-  history: createWebHashHistory('/apps/deskname'), // TODO: changeme
+  history: createWebHashHistory('/apps/counter'), // TODO: changeme
   routes,
 });
 

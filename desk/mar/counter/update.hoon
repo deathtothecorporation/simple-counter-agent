@@ -4,7 +4,7 @@
 ++  grow  ::  convert to
   |%
   ++  noun  upd
-  :: ++  json  (update:en-js upd)
+  ++  json  (update:en-js upd)
   --
 ::
 ++  grab  ::  convert from

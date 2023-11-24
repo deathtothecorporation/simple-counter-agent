@@ -11,7 +11,6 @@
 
 +$  update
   $%  [%update =numb]
-      [%subd whom]
       [%decd =numb]
       [%incd =numb]
   ==

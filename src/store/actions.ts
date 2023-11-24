@@ -27,6 +27,11 @@ type AugmentedActionContext = {
 } & Omit<ActionContext<State, State>, "commit">;
 
 export interface Actions {
+  [ActionTypes.SET_COUNTER](
+    { commit }: AugmentedActionContext,
+    payload: number
+  ): void;
+
   [ActionTypes.EXAMPLE](
     { commit }: AugmentedActionContext,
     payload: string
@@ -64,8 +69,8 @@ export const actions: ActionTree<State, State> & Actions = {
 
       // Main all-responses-handler
       (data) => {
-        if (T.IsResponseOne(data)) {
-          dispatch(ActionTypes.EXAMPLE, data.test.thing as string);
+        if (T.IsUpdateResponse(data)) {
+          dispatch(ActionTypes.SET_COUNTER, data.update.counter);
         }
         if (R.IsThingResponse(data)) {
           // Do something for this particular response
@@ -77,6 +82,14 @@ export const actions: ActionTree<State, State> & Actions = {
         // Thing to do on subscription callback, if anything
       }
     );
+  },
+
+  [ActionTypes.SET_COUNTER](
+    { commit, getters },
+    payload: number
+  ) {
+    console.log('dispatching SET_COUNTER action with: ', payload)
+    commit(MutationTypes.SET_COUNTER, payload)
   },
 
   [ActionTypes.EXAMPLE](

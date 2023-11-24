@@ -1,3 +1,5 @@
+import {Update} from "vite/types/hmrPayload";
+
 export interface AgentSubscription {
   agentName: string;
   subscriptionNumber: number;
@@ -9,11 +11,11 @@ export interface Thing {
   key: 'value'
 }
 
-export type GallResponse = ExampleResponseOne | ExampleResponseTwo
+export type GallResponse = UpdateResponse | ExampleResponseTwo
 
-export interface ExampleResponseOne {
-  test: {
-    thing: 'one'
+export interface UpdateResponse {
+  update: {
+    counter: number
   }
 }
 export interface ExampleResponseTwo {
@@ -22,7 +24,7 @@ export interface ExampleResponseTwo {
   }
 }
 
-export const IsResponseOne = (r: GallResponse):
-  r is ExampleResponseOne => {
-  return ('test' in r)
+export const IsUpdateResponse = (r: GallResponse):
+  r is UpdateResponse => {
+  return ('update' in r)
 }

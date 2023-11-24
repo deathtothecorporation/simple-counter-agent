@@ -9,7 +9,7 @@
 ++  grab  ::  convert from
   |%
   ++  noun  act
-  :: ++  json  act:de-js
+  ++  json  action:de-js
   --
 ++  grad  %noun
 --

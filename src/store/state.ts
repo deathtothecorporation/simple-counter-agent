@@ -9,7 +9,7 @@ const uiElementLoadingState: L.UILoaderState = {
 }
 
 export const state = {
-  exampleThings: [] as Array<T.Thing>,
+  counter: 0 as number,
   loadingStates: uiElementLoadingState as L.UILoaderState,
 }
 

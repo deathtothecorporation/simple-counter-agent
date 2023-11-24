@@ -1,5 +1,5 @@
 <template>
-  App.vue
+  <h1 class="text-xl">Counter</h1>
   <div>
     <router-view />
   </div>

@@ -64,7 +64,7 @@
             :^  %give  %fact  ~[/web-ui]
             :-  %counter-update
             !>  ^-  update
-            [%incd numb]
+            [%update numb]
         ==
         :: =/  gall-card  ~
         =/  gall-card  ~[(fact:io counter-update+!>(`update`[%incd numb]) ~[/sent-cards])]
@@ -76,7 +76,7 @@
         :~  :^  %give  %fact  ~[/web-ui]
             :-  %counter-update
             !>  ^-  update
-            [%decd numb]
+            [%update numb]
         ==
           %sub
         ::  insure subscriptions can only be started by us
@@ -109,6 +109,7 @@
     |=  pat=path
     ~>  %bout.[0 '%counter +on-watch']
     ^-  (quip card _this)
+    ~&  "number {<numb>}"
     ?+  pat  (on-watch:def pat)
         [%web-ui ~]
       :_  this

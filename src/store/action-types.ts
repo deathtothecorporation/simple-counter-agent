@@ -1,4 +1,6 @@
 export enum ActionTypes {
+  SET_COUNTER = 'SET_COUNTER',
+
   EXAMPLE = 'EXAMPLE',
   AIRLOCK_OPEN = 'AIRLOCK_OPEN',
 

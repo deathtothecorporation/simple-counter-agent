@@ -7,9 +7,14 @@ import { sigShip } from "@/helpers"
 import * as MR from "@/api/types/my-response";
 
 export type Mutations<S = State> = {
+  [MutationTypes.SET_COUNTER](
+    state: S,
+    payload: number
+  ): void;
+
   [MutationTypes.EXAMPLE](
     state: S,
-    payload: T.ExampleResponseOne
+    payload: T.ExampleResponseTwo
   ): void;
 
   [MutationTypes.LOADING_STATE_SET](
@@ -21,6 +26,13 @@ export type Mutations<S = State> = {
 };
 
 export const mutations: MutationTree<State> & Mutations = {
+  [MutationTypes.SET_COUNTER](
+    state,
+    payload: Parameters<Mutations[MutationTypes.SET_COUNTER]>[1]
+  ) {
+    state.counter = payload
+  },
+
   [MutationTypes.EXAMPLE](
     state,
     payload: Parameters<Mutations[MutationTypes.EXAMPLE]>[1]
