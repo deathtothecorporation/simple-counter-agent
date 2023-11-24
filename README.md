@@ -2,6 +2,8 @@
 
 docs for general urbit environment setup: https://docs.urbit.org/courses/environment
 
+elm wrapper around the js api: https://github.com/figbus/elm-urbit-api
+
 ## Urbit setup
 
 - Have `urbit` installed locally.
