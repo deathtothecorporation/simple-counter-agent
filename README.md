@@ -124,7 +124,7 @@ export function openAirlockTo(
 }
 ```
 
-## Responding to "subscription" data
+### Responding to "subscription" data
 
 > These are like websocket events
 
@@ -148,7 +148,7 @@ which automatically renders in the template.
 We jumped straight to _getting_ data from urbit, but didn't say how we send it
 anything.
 
-## Sending actions; Pokes
+### Sending actions; Pokes
 
 > Like HTTP POST requests
 
@@ -196,7 +196,7 @@ airlock function, you'll remember that our front end _is_ listening on the
 running that was subscribed to this path, it would see the counter changing even
 if wasn't the agent _doing_ the increments/decrements.)
 
-## Scries; asking for data
+### Scries; asking for data
 
 > Like HTTP GET requests
 
