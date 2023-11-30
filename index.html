@@ -11,7 +11,6 @@
   <body>
     <button id="start" type="button" onClick="connect()" >Connect</button>
 
-    <button id="toggle" type="button" onClick="doSub()" >Subscribe</button>
     <pre id="event"></pre>
 
 
@@ -22,26 +21,8 @@
 
   </body>
     <script>
-    const toggle = document.getElementById("toggle");
     const event = document.getElementById("event");
-    function doSub() {
-      window.id = api.subscribe({
-        app: "counter",
-        path: "/web-ui",
-        event: printEvent,
-        quit: doSub,
-        err: subFail
-      });
-      toggle.innerHTML = "Unsubscribe";
-      toggle.onclick = doUnsub;
-      event.innerHTML = "Awaiting event";
-    };
-    function doUnsub() {
-      api.unsubscribe(window.id);
-      toggle.innerHTML = "Subscribe";
-      toggle.onclick = doSub;
-      event.innerHTML = "Subscription closed";
-    };
+
     function printEvent(update) {
       event.innerHTML = JSON.stringify(update, null, 2);
     };
@@ -49,23 +30,26 @@
       event.innerHTML = "Subscription failed!";
     };
 
-
-
     async function connect() {
-      window.api = await UrbitHttpApi.Urbit.authenticate({
+      window.airlock = await UrbitHttpApi.Urbit.authenticate({
           ship: "sum",
           url: "localhost:8080",
           code: "nacmun-tandem-samter-dishes",
           verbose: true
       });
-      document.body.innerHTML = "Connected!";
+      window.airlock.subscribe({
+        app: "counter",
+        path: "/web-ui",
+        event: printEvent,
+        quit: doUnsub,
+        err: subFail
+      });
+      event.innerHTML = "Awaiting event";
     };
 
-    const api = new UrbitHttpApi.Urbit("");
-    api.ship = window.ship;
 
     function doUpPoke() {
-      api.poke({
+      window.airlock.poke({
         app: "counter",
         mark: "counter-do",
         json: { inc: null },
@@ -75,7 +59,7 @@
     }
 
     function doDownPoke() {
-      api.poke({
+      window.airlock.poke({
         app: "counter",
         mark: "counter-do",
         json: { dec: null },
@@ -83,6 +67,9 @@
         onError: error
       });
     }
+
+    function doUnsub() {
+          }
 
     function success() {
       // document.getElementById("msg").value = "";

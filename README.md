@@ -54,18 +54,67 @@ below for web login instructions)
 
 Since this branch De-Vue-ifiies the repo, there is no complexity on the UI side. Everything is in the index.html file.
 
+Just get a basic web server:
+
 - `npm i`
 - `npm run serve`
-- This runs a `vite` dev server and proxies to the urbit, which helps avoid CORS
-issues. You'll visit _this_ URL to see the result of js dev without having
-to `build` the app to `/dist` files, etc.
-- visit the base URL of the port mentioned there (probably
-http://localhost:3000) and _log in to the fake ship_ with the code from above.
-- now visit localhost:3000/apps/counter/ **note the trailing slash! include
-this character**. If you go to the base route to get the "Grid" and click on the
-"counter" app tile, it _won't_ add the trailing slash.
+- the above command will show you something like:
+
+```
+vite v2.9.16 dev server running at:
+
+  > Local:    http://localhost:3001/
+  > Network:  http://10.0.1.38:3001/
+  > Network:  http://100.72.2.29:3001/
+  > Network:  http://172.17.0.1:3001/
+
+  ready in 135ms.
+```
+
+Make sure you're running a `~sum` fake ship locally, as `index.html` hardcodes this and expects it.
+
+Open the dev server port in a browser (`http://localhost:3001` in the above)
+
+Click "Connect". Once connected you should see a JSON output of the urbit state. If nothing happens, you probably need to configure CORS. Do this in the dojo:
+
+- `+cors-registry`
+- outputs:
+```
+[   requests
+  [ n=~~http~3a.~2f.~2f.localhost~3a.3001
+    l={}
+    r={~~http~3a.~2f.~2f.localhost~3a.5173}
+  ]
+  approved=~
+  rejected=~
+]
+```
+
+- We can see the 'request' from http://localhost:3001 (the encoding makes it look funny) now run:
+- `|cors-approve 'http://localhost:3001'` (single quotes are important here)
+- if that doesn't complain, then it worked, and re-running `+cors-registry` should look like this:
+
+```
+> +cors-registry
+[ requests=[n=~~http~3a.~2f.~2f.localhost~3a.5173 l={} r={}]
+  approved=[n=~~http~3a.~2f.~2f.localhost~3a.3001 l={} r={}]
+  rejected=~
+]
+```
+
+Now try to click "Connect" again in the UI.
+
+Once connected you should see a JSON output of the urbit state.
+
+Click "Up" to fire off a counter-increment poke. you should see the subscription response come back and update the UI state right away. Same for "Down". (see what happens if you try to go to -1)
 
 ## Brief UI explanation:
+
+**Most of the docs here are for the vue version of the app. the basic
+idea is the same, minus all the Vuex indirection and some wrapper code
+around pokes and subscriptions. As of now, _all_ of the front end logic
+is found in `index.html`. I'll keep the below here because the urbit
+side details are still relevant.**
 
 - `src/views/Home.vue` - this is the single component that does all the
 rendering and app logic. Normally you'd divide these responsibilities out to
