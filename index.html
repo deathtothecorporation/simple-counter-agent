@@ -9,9 +9,10 @@
     <title>Urbit Counter App</title>
   </head>
   <body>
-    <button id="start" type="button" onClick="connect()" >Connect</button>
+    <button id="toggle" type="button" onClick="connect()" >Connect</button>
 
     <pre id="event"></pre>
+    <pre id="subNumber"></pre>
 
 
     <button id="submit" type="button" onClick="doDownPoke()" >down</button>
@@ -21,7 +22,10 @@
 
   </body>
     <script>
+    const toggle = document.getElementById("toggle");
     const event = document.getElementById("event");
+    const subNumber = document.getElementById("subNumber");
+    subNumber.innerHTML = "no subscription";
 
     function printEvent(update) {
       event.innerHTML = JSON.stringify(update, null, 2);
@@ -31,6 +35,7 @@
     };
 
     async function connect() {
+      console.log('doing connect')
       window.airlock = await UrbitHttpApi.Urbit.authenticate({
           ship: "sum",
           url: "localhost:8080",
@@ -41,11 +46,27 @@
         app: "counter",
         path: "/web-ui",
         event: printEvent,
-        quit: doUnsub,
+        quit: connect,
         err: subFail
-      });
+      }).then((r) => {
+        console.log('subscription id ', r)
+        window.id = r
+        subNumber.innerHTML = "subscription id " + window.id;
+      })
+      toggle.innerHTML = "Unsubscribe";
+      toggle.onclick = doUnsub;
       event.innerHTML = "Awaiting event";
     };
+
+    function doUnsub() {
+      console.log('doing unsub ', window.id)
+      window.airlock.unsubscribe(window.id);
+      toggle.innerHTML = "Subscribe";
+      toggle.onclick = connect;
+      subNumber.innerHTML = "no subscription";
+      event.innerHTML = "Subscription closed";
+    };
+
 
 
     function doUpPoke() {
@@ -67,9 +88,6 @@
         onError: error
       });
     }
-
-    function doUnsub() {
-          }
 
     function success() {
       // document.getElementById("msg").value = "";
