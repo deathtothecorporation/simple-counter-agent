@@ -4,15 +4,96 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no, maximum-scale=1.0,">
-    <title>Vite app</title>
+    <script src="https://unpkg.com/@urbit/http-api"></script>
+    <script src="/session.js"></script>
+    <title>Urbit Counter App</title>
   </head>
   <body>
-    <noscript>
-      <strong>We're sorry but doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
-    </noscript>
-    <div id="app"></div>
+    <button id="start" type="button" onClick="connect()" >Connect</button>
 
-    <script type="module" src="/src/main.js"></script>
+    <button id="toggle" type="button" onClick="doSub()" >Subscribe</button>
+    <pre id="event"></pre>
+
+
+    <button id="submit" type="button" onClick="doDownPoke()" >down</button>
+    <button id="submit" type="button" onClick="doUpPoke()" >Up</button>
+    <p id="err"></p>
+
 
   </body>
+    <script>
+    const toggle = document.getElementById("toggle");
+    const event = document.getElementById("event");
+    function doSub() {
+      window.id = api.subscribe({
+        app: "counter",
+        path: "/web-ui",
+        event: printEvent,
+        quit: doSub,
+        err: subFail
+      });
+      toggle.innerHTML = "Unsubscribe";
+      toggle.onclick = doUnsub;
+      event.innerHTML = "Awaiting event";
+    };
+    function doUnsub() {
+      api.unsubscribe(window.id);
+      toggle.innerHTML = "Subscribe";
+      toggle.onclick = doSub;
+      event.innerHTML = "Subscription closed";
+    };
+    function printEvent(update) {
+      event.innerHTML = JSON.stringify(update, null, 2);
+    };
+    function subFail() {
+      event.innerHTML = "Subscription failed!";
+    };
+
+
+
+    async function connect() {
+      window.api = await UrbitHttpApi.Urbit.authenticate({
+          ship: "sum",
+          url: "localhost:8080",
+          code: "nacmun-tandem-samter-dishes",
+          verbose: true
+      });
+      document.body.innerHTML = "Connected!";
+    };
+
+    const api = new UrbitHttpApi.Urbit("");
+    api.ship = window.ship;
+
+    function doUpPoke() {
+      api.poke({
+        app: "counter",
+        mark: "counter-do",
+        json: { inc: null },
+        onSuccess: success,
+        onError: error
+      });
+    }
+
+    function doDownPoke() {
+      api.poke({
+        app: "counter",
+        mark: "counter-do",
+        json: { dec: null },
+        onSuccess: success,
+        onError: error
+      });
+    }
+
+    function success() {
+      // document.getElementById("msg").value = "";
+      document.getElementById("err").innerHTML = "";
+    }
+    function error() {
+      // document.getElementById("msg").value = "";
+      document.getElementById("err").innerHTML = "Poke failed!";
+    }
+
+
+  </script>
+
 </html>

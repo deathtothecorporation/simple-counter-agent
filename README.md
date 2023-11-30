@@ -52,8 +52,8 @@ below for web login instructions)
 
 ## UI Setup
 
-- Create a `.env` file, copying in the example from `env.example`. if your local
-fake ship is running at a different port, use those details in your `.env` file.
+Since this branch De-Vue-ifiies the repo, there is no complexity on the UI side. Everything is in the index.html file.
+
 - `npm i`
 - `npm run serve`
 - This runs a `vite` dev server and proxies to the urbit, which helps avoid CORS

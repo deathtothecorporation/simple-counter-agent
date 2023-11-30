@@ -1,5 +1,4 @@
 import { defineConfig } from "vite";
-import vue from "@vitejs/plugin-vue";
 import { urbitPlugin } from "@urbit/vite-plugin-urbit";
 
 import path = require("path");
@@ -10,7 +9,7 @@ const target = process.env.VITE_URBIT_TARGET;
 const base = process.env.VITE_URBIT_DESK;
 
 export default defineConfig({
-  plugins: [vue(), urbitPlugin({ base, target })],
+  plugins: [urbitPlugin({ base, target })],
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
