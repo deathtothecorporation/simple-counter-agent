@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Elm Counter App</title>
+</head>
+
+<body>
+    <div id="elm-node"></div>
+    <script src="https://unpkg.com/@urbit/http-api"></script>
+    <script src="main.js"></script>
+    <script>
+        var app = Elm.Main.init({
+            node: document.getElementById('elm-node')
+        });
+
+        function connect()
+        {
+            console.log('trying to reconnect');
+        }
+
+        app.ports.sendPoke.subscribe(function (poke) {
+            console.log('sending poke', poke);
+            window.airlock.poke({
+                app: "counter",
+                mark: "json",
+                json: poke,
+                onSuccess: function () {
+                    console.log('poke success');
+                },
+                onError: function (err) {
+                    console.log('poke error', err);
+                }
+            });
+        });
+
+        app.ports.connect.subscribe(function () {
+            console.log('doing connect');
+
+            try {
+                window.airlock = UrbitHttpApi.Urbit.authenticate({
+                    ship: "sum",
+                    url: "localhost:80",
+                    code: "nacmun-tandem-samter-dishes",
+                    verbose: true
+                });
+
+                window.airlock.subscribe({
+                app: "counter",
+                path: "/web-ui",
+                event: printEvent,
+                quit: connect,
+                err: subFail
+                }).then((r) => {
+                    console.log('subscription id ', r)
+                });
+            } catch (e) {  
+                console.log('error', e);
+            }
+        });
+
+        app.ports.disconnect.subscribe(function () {
+            console.log('doing disconnect');
+            window.airlock.unsubscribe(window.id);
+        });
+
+        function printEvent(update) {
+            app.ports.receiveEvent.send(JSON.stringify(update, null, 2));
+        };
+        
+        function subFail() {
+            app.ports.subscriptionFailed.send("Subscription failed!");
+        };
+
+    </script>
+</body>
+
+</html>
