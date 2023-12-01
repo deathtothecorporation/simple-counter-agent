@@ -20,7 +20,7 @@ type Msg
     | Disconnect
     | Increment
     | Decrement
-    | UpdateCounter Int
+    | UpdateCounter Update
     | HandleError String
 
 
@@ -103,8 +103,8 @@ update msg model =
         Decrement ->
             ( model, decrementCmd )
 
-        UpdateCounter newCount ->
-            ( { model | counter = newCount }, Cmd.none )
+        UpdateCounter update_ ->
+            ( { model | counter = update_.update.counter }, Cmd.none )
 
         HandleError errMsg ->
             ( { model | error = errMsg }, Cmd.none )
@@ -142,7 +142,14 @@ init _ =
 subscriptions : Model -> Sub Msg
 subscriptions _ =
     Sub.batch
-        [ receiveEvent (UpdateCounter << Maybe.withDefault 0 << String.toInt)
+        [ receiveEvent (\jsonString ->
+            case Decode.decodeString updateDecoder jsonString of
+                Ok update_ ->
+                    UpdateCounter update_
+
+                Err errMsg ->
+                    HandleError "meh" --(errMsg |> Debug.toString)
+          )
         , subscriptionFailed HandleError
         ]
 

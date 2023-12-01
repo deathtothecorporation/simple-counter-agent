@@ -14,65 +14,76 @@
             node: document.getElementById('elm-node')
         });
 
-        function connect()
-        {
-            console.log('trying to reconnect');
-        }
-
-        app.ports.sendPoke.subscribe(function (poke) {
-            console.log('sending poke', poke);
-            window.airlock.poke({
-                app: "counter",
-                mark: "json",
-                json: poke,
-                onSuccess: function () {
-                    console.log('poke success');
-                },
-                onError: function (err) {
-                    console.log('poke error', err);
-                }
-            });
-        });
-
-        app.ports.connect.subscribe(function () {
+        // function to connect to urbit
+        // can also be called by "quit" callback to try to reconnect
+        async function connect() {
             console.log('doing connect');
-
             try {
-                window.airlock = UrbitHttpApi.Urbit.authenticate({
+                window.airlock = await UrbitHttpApi.Urbit.authenticate({
                     ship: "sum",
-                    url: "localhost:80",
+                    // proxy to localhost:80 to avoid CORS issues
+                    url: "http://localhost:5173/api",
                     code: "nacmun-tandem-samter-dishes",
                     verbose: true
                 });
 
-                window.airlock.subscribe({
-                app: "counter",
-                path: "/web-ui",
-                event: printEvent,
-                quit: connect,
-                err: subFail
-                }).then((r) => {
-                    console.log('subscription id ', r)
+                window.id = await window.airlock.subscribe({
+                    app: "counter",
+                    path: "/web-ui",
+                    event: (a => {
+                        console.log('got event', a);
+                        // send the update object to elm
+                        app.ports.receiveEvent.send(JSON.stringify(a, null, 2));
+                    }),
+                    quit: connect,
+                    err: subFail
                 });
-            } catch (e) {  
+
+                console.log('subscription id ', window.id);
+            } catch (e) {
                 console.log('error', e);
             }
-        });
+        }
 
-        app.ports.disconnect.subscribe(function () {
-            console.log('doing disconnect');
-            window.airlock.unsubscribe(window.id);
-        });
-
-        function printEvent(update) {
-            app.ports.receiveEvent.send(JSON.stringify(update, null, 2));
-        };
-        
+        // complain if the subscription failed
+        // could implement an additional port
         function subFail() {
+            console.log('subscription failed');
             app.ports.subscriptionFailed.send("Subscription failed!");
         };
 
+        // subscribe to the "connect" port message
+        app.ports.connect.subscribe(async function () {
+            await connect();
+        });
+
+        // subscribe to the "disconnect" port message
+        app.ports.disconnect.subscribe(function () {
+            if (!window.airlock) {
+                console.log('no airlock');
+            } else {
+                console.log('doing disconnect');
+                window.airlock.unsubscribe(window.id);
+                window.airlock = undefined;
+            }
+        });
+
+        // subscribe to the "sendPoke" port message
+        app.ports.sendPoke.subscribe(function (poke) {
+            if (!window.airlock) {
+                console.log('no airlock');
+            } else {
+                console.log('sending poke', poke);
+                window.airlock.poke({
+                    app: "counter",
+                    mark: "counter-do",
+                    json: JSON.parse(poke), // encode the poke string for consumption by urbit,
+                    onSuccess: () => { console.log('poke success'); },
+                    onError: (err) => { console.log('poke error', err); }
+                });
+            }
+        });
+
     </script>
 </body>
-
 </html>
