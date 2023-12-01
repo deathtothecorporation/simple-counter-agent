@@ -2,5 +2,6 @@ node_modules/
 package-lock.json
 yarn.lock
 .env
-elm/elm-stuff/
-elm/sum/
+elm-stuff/
+sum/
+old_plain_js/

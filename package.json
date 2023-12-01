@@ -1,22 +1,16 @@
 {
-  "name": "vite-vue3-urbit-template",
-  "version": "0.1.0",
+  "name": "elm",
   "private": true,
+  "version": "0.0.0",
+  "type": "module",
   "scripts": {
-    "serve": "vite --host",
-    "build": "vite build",
-    "preview": "vite preview"
-  },
-  "dependencies": {
-    "core-js": "^3.8.3"
-  },
+    "build:elm": "node build-elm.js",
+    "dev": "npm run build:elm && vite",
+    "build": "npm run build:elm && vite build",
+    "serve": "vite preview"
+  },  
   "devDependencies": {
-    "eslint": "^7.32.0",
-    "eslint-config-prettier": "^8.3.0",
-    "eslint-plugin-prettier": "^4.0.0",
-    "eslint-plugin-vue": "^8.0.3",
-    "prettier": "^2.4.1",
-    "typescript": "~4.5.5",
-    "vite": "^2.9.9"
+    "elm": "^0.19.1-6",
+    "vite": "^5.0.0"
   }
 }
