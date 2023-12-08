@@ -7,7 +7,7 @@
     "build:elm": "node build-elm.js",
     "dev": "npm run build:elm && vite",
     "build": "npm run build:elm && vite build",
-    "serve": "vite preview"
+    "preview-build": "vite preview"
   },  
   "devDependencies": {
     "elm": "^0.19.1-6",
