@@ -43,7 +43,9 @@ But in this way, you can see what a plain `@ud` looks like, as well as a head-ta
 
 - implement `++cue` in Elm: https://developers.urbit.org/reference/hoon/stdlib/2p#cue
   - we are `jam`'ing the state (jam turns any noun into an atom) in the json, so the Elm side should implement `cue`, which produces a noun)
+  - there is an existing implementation here: https://github.com/urbit/nockjs/blob/master/src/serial.ts#L76
 
+---
 
 docs for general urbit environment setup: https://docs.urbit.org/courses/environment
 
