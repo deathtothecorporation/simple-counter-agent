@@ -1,5 +1,50 @@
 # Simple Counter agent + vue.js front end
 
+The front-end now gets this json:
+
+```
+data: '{"json":{"update":{"entire-update":23394126773053281713665,"counter":5072}},"id":2,"mark":"counter-update","response":"diff"}'
+```
+
+The "counter" and "entire-update" values there are the result of this json encoding:
+
+```hoon
+  ++  update
+    |=  upd=^update
+    ^-  json
+    %+  frond  'update'
+    %-  pairs
+    :~  counter+(numb (jam numb.upd))  :: HERE
+        entire-update+(numb (jam upd)) :: HERE
+    ==
+
+```
+
+we're calling `jam` to turn the nouns into an atoms, and then calling `numb` on those to json-encode them as integers.
+
+in "counter", we're just jamming the current `@ud` value of the counter state (`(jam numb.upd)`)
+in "entire-update" we're jamming the whole "update" type (`(jam upd)`).
+
+```
++$  update
+  $%  [%update =numb]
+      [%decd =numb]
+      [%incd =numb]
+  ==
+```
+
+Specifically, it should be the `[%update =numb]` cell, where the `=numb` value is the current counter value from state.
+
+This is a scratch attempt and will need to be meaningfully changed before going too much further.  
+But in this way, you can see what a plain `@ud` looks like, as well as a head-tagged cell that includes that same `@ud`.
+
+
+# Possible TODOs:
+
+- implement `++cue` in Elm: https://developers.urbit.org/reference/hoon/stdlib/2p#cue
+  - we are `jam`'ing the state (jam turns any noun into an atom) in the json, so the Elm side should implement `cue`, which produces a noun)
+
+
 docs for general urbit environment setup: https://docs.urbit.org/courses/environment
 
 elm wrapper around the js api: https://github.com/figbus/elm-urbit-api

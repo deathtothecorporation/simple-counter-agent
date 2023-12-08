@@ -8,7 +8,8 @@
     ^-  json
     %+  frond  'update'
     %-  pairs
-    :~  counter+(numb numb.upd)
+    :~  counter+(numb (jam numb.upd))
+        entire-update+(numb (jam upd))
     ==
   ::
   --
