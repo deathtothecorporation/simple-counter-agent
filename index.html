@@ -8,6 +8,7 @@
 <body>
     <div id="elm-node"></div>
     <script src="https://unpkg.com/@urbit/http-api"></script>
+    <script src="nock.min.js"></script>
     <script src="main.js"></script>
     <script>
         var app = Elm.Main.init({
@@ -32,6 +33,8 @@
                     path: "/web-ui",
                     event: (a => {
                         console.log('got event', a);
+                        // cue the event
+                        console.log(window.nockjs_.cue(window.nockjs_.Atom.fromInt(a.update.counter)));
                         // send the update object to elm
                         app.ports.receiveEvent.send(JSON.stringify(a, null, 2));
                     }),
