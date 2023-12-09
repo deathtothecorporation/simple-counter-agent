@@ -34,7 +34,7 @@
                     event: (a => {
                         console.log('got event', a);
                         // cue the event
-                        console.log(window.nockjs_.cue(window.nockjs_.Atom.fromInt(a.update.counter)));
+                        console.log(window.nockjs_.cue(window.nockjs_.Atom.fromInt(a.update['counter'])));
                         // send the update object to elm
                         app.ports.receiveEvent.send(JSON.stringify(a, null, 2));
                     }),
